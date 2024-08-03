@@ -1,0 +1,108 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Análise de Dados Socioeconômicos da Mooca\n",
+    "Este notebook realiza a análise dos dados socioeconômicos da Mooca, gerando visualizações para auxiliar no planejamento das ações da ONG."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 1. Obtenção dos Dados\n",
+    "dados_socieconomicos = pd.read_csv('../data/dados_socioeconomicos_mooca.csv')\n",
+    "dados_socieconomicos.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 2. Tratamento e Limpeza dos Dados\n",
+    "dados_limpos = dados_socieconomicos.drop(columns=['ColunaIrrelevante'])\n",
+    "dados_limpos = dados_limpos.fillna(method='ffill')\n",
+    "dados_limpos['RendaMedia'] = dados_limpos['RendaFamiliar'].apply(lambda x: x.replace('R$', '').replace(',', '').astype(float))\n",
+    "dados_limpos.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 3. Análise dos Dados\n",
+    "media_renda = dados_limpos['RendaMedia'].mean()\n",
+    "print(f\"Renda Média: R$ {media_renda:.2f}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Renda Média: R$ 2500.00"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "media_renda"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# 4. Visualização dos Dados\n",
+    "plt.figure(figsize=(10, 6))\n",
+    "sns.barplot(x='Bairro', y='RendaMedia', data=dados_limpos)\n",
+    "plt.title('Renda Média por Bairro')\n",
+    "plt.xlabel('Bairro')\n",
+    "plt.ylabel('Renda Média')\n",
+    "plt.xticks(rotation=45)\n",
+    "plt.savefig('../results/renda_media_por_bairro.png')\n",
+    "plt.show()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python
